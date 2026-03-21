@@ -9,8 +9,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Load_hitokoto 加载句子
-func Load_hitokoto() []models.Hitokoto {
+// LoadHitokoto 加载句子
+func LoadHitokoto() []models.Hitokoto {
 	var hit []models.Hitokoto
 	res, err := os.Open("./cartoon.jsonl")
 	if err != nil {
@@ -34,8 +34,8 @@ func Load_hitokoto() []models.Hitokoto {
 	return hit
 }
 
-// Load_config 加载配置文件
-func Load_config() models.Config {
+// LoadConfig 加载配置文件
+func LoadConfig() models.Config {
 	var config models.Config
 	res, err := os.ReadFile("./config.yaml")
 	if err != nil {

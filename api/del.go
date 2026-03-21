@@ -3,8 +3,9 @@ package api
 import (
 	"MottoGo/middleware"
 	"MottoGo/models"
-	"github.com/gin-gonic/gin"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Del_hit(r *gin.Engine, hit []models.Hitokoto, k []string) {
@@ -14,7 +15,7 @@ func Del_hit(r *gin.Engine, hit []models.Hitokoto, k []string) {
 		Authorization := c.GetHeader("Authorization")
 		Id_int, err := strconv.Atoi(Id)
 		// 验证信息合法
-		if !middleware.Auth_key(k, Authorization) {
+		if !middleware.AuthKey(k, Authorization) {
 			c.JSON(400, gin.H{"error": "无权限"})
 		}
 		if err != nil {

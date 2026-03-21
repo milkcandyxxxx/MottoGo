@@ -6,8 +6,9 @@ import (
 	"MottoGo/models"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Add_hit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
@@ -19,8 +20,8 @@ func Add_hit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
 			c.JSON(400, gin.H{"error": "Invalid JSON"})
 			return
 		}
-		// Auth_key 进行验
-		middleware.Auth_key(k, Authorization)
+		// AuthKey 进行验证
+		middleware.AuthKey(k, Authorization)
 		// 获取Id
 		hitokoto.Id = (*hit)[len(*hit)-1].Id + 1
 		byteHit, err := json.Marshal(hitokoto)
@@ -51,7 +52,7 @@ func Add_hit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
 			return
 		}
 		c.JSON(200, gin.H{"message": "写入成功", "data": hitokoto})
-		*hit = database.Load_hitokoto()
+		*hit = database.LoadHitokoto()
 		fmt.Println(*hit)
 	})
 }

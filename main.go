@@ -4,8 +4,9 @@ import (
 	"MottoGo/api"
 	"MottoGo/database"
 	"MottoGo/models"
-	"github.com/gin-gonic/gin"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 var Hit []models.Hitokoto
@@ -16,8 +17,8 @@ var key_user []string
 var key_all []string
 
 func init() {
-	Hit = database.Load_hitokoto()
-	configs = database.Load_config()
+	Hit = database.LoadHitokoto()
+	configs = database.LoadConfig()
 	port = configs.Server.Port
 	key_admin = configs.Security.Key.Admin
 	key_user = configs.Security.Key.User

@@ -3,9 +3,10 @@ package api
 import (
 	"MottoGo/middleware"
 	"MottoGo/models"
-	"github.com/gin-gonic/gin"
 	"math/rand"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 var Ratelimit = &middleware.Ratelimit{}
@@ -17,7 +18,7 @@ func Get(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
 			return
 		}
 		id_old := c.DefaultQuery("id", "0")
-		if !middleware.Security_verification(c, k) {
+		if !middleware.SecurityVerification(c, k) {
 			c.JSON(401, gin.H{"error": "who are you?"})
 			return
 		}
