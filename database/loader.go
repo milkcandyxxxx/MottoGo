@@ -1,9 +1,9 @@
 package database
 
 import (
+	"MottoGo/models"
 	"encoding/json"
 	"log"
-	"milksay/models"
 	"os"
 
 	"gopkg.in/yaml.v3"

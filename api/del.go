@@ -1,9 +1,9 @@
 package api
 
 import (
+	"MottoGo/middleware"
+	"MottoGo/models"
 	"github.com/gin-gonic/gin"
-	"milksay/middleware"
-	"milksay/models"
 	"strconv"
 )
 

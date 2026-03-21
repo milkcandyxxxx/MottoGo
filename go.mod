@@ -1,4 +1,4 @@
-module milksay
+module MottoGo
 
 go 1.25.0
 

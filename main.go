@@ -1,14 +1,14 @@
 package main
 
 import (
+	"MottoGo/api"
+	"MottoGo/database"
+	"MottoGo/models"
 	"github.com/gin-gonic/gin"
 	"log"
-	"milksay/api"
-	"milksay/database"
-	"milksay/models"
 )
 
-var hit []models.Hitokoto
+var Hit []models.Hitokoto
 var configs models.Config
 var port string
 var key_admin []string
@@ -16,7 +16,7 @@ var key_user []string
 var key_all []string
 
 func init() {
-	hit = database.Load_hitokoto()
+	Hit = database.Load_hitokoto()
 	configs = database.Load_config()
 	port = configs.Server.Port
 	key_admin = configs.Security.Key.Admin
@@ -27,10 +27,10 @@ func init() {
 }
 func main() {
 	r := gin.Default()
-	api.Get(r, hit, key_all)
-	api.Add_hit(r, hit, key_admin)
-	api.Del_hit(r, hit, key_admin)
-	err := r.Run(":8080")
+	api.Get(r, &Hit, key_all)
+	api.Add_hit(r, &Hit, key_admin)
+	api.Del_hit(r, Hit, key_admin)
+	err := r.Run(":9090")
 	if err != nil {
 		return
 	}
