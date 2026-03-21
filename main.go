@@ -4,6 +4,7 @@ import (
 	"MottoGo/api"
 	"MottoGo/database"
 	"MottoGo/models"
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,7 @@ func main() {
 	api.Get(r, &Hit, key_all)
 	api.AddHit(r, &Hit, key_admin)
 	api.DelHit(r, Hit, key_admin)
-	err := r.Run(":9090")
+	err := r.Run(fmt.Sprintf("%s", port))
 	if err != nil {
 		return
 	}
