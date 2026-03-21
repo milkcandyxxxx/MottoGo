@@ -11,8 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Add_hit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
-	r.POST("/hitokoto/Add_hit", func(c *gin.Context) {
+func AddHit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
+	r.POST("/hitokoto/AddHit", func(c *gin.Context) {
 		var hitokoto models.Hitokoto
 		err := c.ShouldBindJSON(&hitokoto)
 		Authorization := c.GetHeader("Authorization")

@@ -29,8 +29,8 @@ func init() {
 func main() {
 	r := gin.Default()
 	api.Get(r, &Hit, key_all)
-	api.Add_hit(r, &Hit, key_admin)
-	api.Del_hit(r, Hit, key_admin)
+	api.AddHit(r, &Hit, key_admin)
+	api.DelHit(r, Hit, key_admin)
 	err := r.Run(":9090")
 	if err != nil {
 		return

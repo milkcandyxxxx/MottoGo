@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Del_hit(r *gin.Engine, hit []models.Hitokoto, k []string) {
-	r.GET("/hitokoto/Del_hit", func(c *gin.Context) {
+func DelHit(r *gin.Engine, hit []models.Hitokoto, k []string) {
+	r.GET("/hitokoto/DelHit", func(c *gin.Context) {
 		// 获取信息
 		Id := c.Query("id")
 		Authorization := c.GetHeader("Authorization")
