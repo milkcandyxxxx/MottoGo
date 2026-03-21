@@ -1,0 +1,10 @@
+server:
+  port: 8080
+security:
+  key:
+    admin:
+      - 202cb962ac59075b964b07152d234b70
+    user:
+      - a2550eeab0724a691192ca13982e6ebd
+      - c4ca4238a0b923820dcc509a6f75849b
+      - 76419c58730d9f35de7ac538c2fd6737
