@@ -3,14 +3,13 @@ package middleware
 import (
 	"crypto/md5"
 	"fmt"
-	"slices"
-
 	"github.com/gin-gonic/gin"
+	"slices"
 )
 
 // SecurityVerification 身份验证
 func SecurityVerification(c *gin.Context, k []string) bool {
-	XAPIKey := c.GetHeader("XAPIKey")
+	XAPIKey := c.GetHeader("X-API-Key")
 	return AuthKey(k, XAPIKey)
 
 }
