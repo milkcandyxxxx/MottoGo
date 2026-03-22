@@ -27,7 +27,7 @@ func LoadHitokoto() []models.Hitokoto {
 		var item models.Hitokoto
 		err := scanner.Decode(&item)
 		if err != nil {
-			break
+			log.Fatalf("读取句子文件失败: %v", err)
 		}
 		hit = append(hit, item)
 	}
@@ -45,6 +45,5 @@ func LoadConfig() models.Config {
 	if err != nil {
 		log.Fatalf("解析配置文件失败: %v", err)
 	}
-	log.Println("加载完成")
 	return config
 }
