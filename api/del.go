@@ -21,11 +21,11 @@ func DelHit(r *gin.Engine) {
 
 		// 权限验证
 		if !middleware.AuthKey(global.KeyAll, key) {
-			c.JSON(401, gin.H{"error": "who are you?"})
+			c.JSON(401, gin.H{"error": "Who are you?"})
 			return
 		}
 		if !middleware.AuthKey(global.KeyAdmin, key) {
-			c.JSON(403, gin.H{"error": "you cannot do it"})
+			c.JSON(403, gin.H{"error": "You cannot do it"})
 			return
 		}
 		if uuid == "" {
@@ -86,7 +86,6 @@ func DelHit(r *gin.Engine) {
 		}
 		c.JSON(200, gin.H{
 			"ok":       "Delete successful",
-			"category": targetCategory,
 			"hitokoto": delHit,
 		})
 	})
