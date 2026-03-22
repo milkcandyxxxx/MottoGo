@@ -1,38 +1,46 @@
 package api
 
 import (
-	"MottoGo/database"
 	"MottoGo/global"
 	"MottoGo/middleware"
 	"MottoGo/models"
 	"encoding/json"
-	"fmt"
-	"os"
-
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"os"
 )
 
+// AddHit 添加句子
 func AddHit(r *gin.Engine) {
 	r.POST("/hitokoto/AddHit", func(c *gin.Context) {
+		// 限流
+		if !Ratelimit.Limit(c.ClientIP()) {
+			c.JSON(429, gin.H{"error": "Too many requests!"})
+			return
+		}
+		// 获取信息
 		var hitokoto models.Hitokoto
 		err := c.ShouldBindJSON(&hitokoto)
 		Authorization := c.GetHeader("Authorization")
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Invalid JSON"})
+			c.JSON(400, gin.H{"error": "Invalid JSON" + err.Error()})
 			return
 		}
 		// AuthKey 进行验证
-		middleware.AuthKey(global.KeyAdmin, Authorization)
-		// 获取 Id
-		hitokoto.Id = global.Hit[len(global.Hit)-1].Id + 1
+		if !middleware.AuthKey(global.KeyAdmin, Authorization) {
+			c.JSON(401, gin.H{"error": "Who are you?"})
+		}
+		// 生成 UUID
+		hitokoto.Uuid = uuid.New().String()
 		byteHit, err := json.Marshal(hitokoto)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Failed to format data"})
+			c.JSON(500, gin.H{"error": "Format failed" + err.Error()})
 			return
 		}
+		// 写入到 cartoon.jsonl 文件
 		f, err := os.OpenFile("./cartoon.jsonl", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "打开文件失败"})
+			c.JSON(500, gin.H{"error": "Failed to open file" + err.Error()})
 			return
 		}
 		defer func(f *os.File) {
@@ -40,20 +48,22 @@ func AddHit(r *gin.Engine) {
 			if err != nil {
 			}
 		}(f)
-		if hitokoto.Id != 0 {
+		// 如果文件不为空，先写入换行符
+		fileInfo, err := f.Stat()
+		if err == nil && fileInfo.Size() > 0 {
 			_, err = f.WriteString("\n")
 			if err != nil {
-				c.JSON(500, gin.H{"error": "写入失败"})
+				c.JSON(500, gin.H{"error": "Write failure" + err.Error()})
 				return
 			}
 		}
 		_, err = f.Write(byteHit)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "写入失败"})
+			c.JSON(500, gin.H{"error": "Write failure" + err.Error()})
 			return
 		}
-		c.JSON(200, gin.H{"message": "写入成功", "data": hitokoto})
-		global.Hit = database.LoadHitokoto()
-		fmt.Println(global.Hit)
+		// 更新全局变量
+		global.Hit[hitokoto.Type] = append(global.Hit[hitokoto.Type], hitokoto)
+		c.JSON(200, gin.H{"message": "Write success", "data": hitokoto})
 	})
 }

@@ -1,8 +1,8 @@
 package models
 
-// Hitokoto 句子json
+// Hitokoto 句子 json
 type Hitokoto struct {
-	Id       int    `json:"id"`
+	Uuid     string `json:"uuid"`
 	Hitokoto string `json:"hitokoto"`
 	From     string `json:"from"`
 	From_who string `json:"from_who"`
