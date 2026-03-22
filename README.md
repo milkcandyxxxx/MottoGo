@@ -4,6 +4,8 @@
 
 下载对应平台，将MottoGo，config.yaml，cartoon.jsonl放置于同一文件下即可。
 
+https://github.com/milkcandyxxxx/MottoGo/releases
+
 ## 配置文件：
 
 密码均为MD5值目前需自己加密填入
