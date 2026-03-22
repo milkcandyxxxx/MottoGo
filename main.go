@@ -3,36 +3,28 @@ package main
 import (
 	"MottoGo/api"
 	"MottoGo/database"
-	"MottoGo/models"
-	"fmt"
-	"log"
-
+	"MottoGo/global"
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
-var Hit []models.Hitokoto
-var configs models.Config
-var port string
-var key_admin []string
-var key_user []string
-var key_all []string
-
 func init() {
-	Hit = database.LoadHitokoto()
-	configs = database.LoadConfig()
-	port = configs.Server.Port
-	key_admin = configs.Security.Key.Admin
-	key_user = configs.Security.Key.User
-	key_all = append(key_admin, key_user...)
+	log.SetPrefix("[MottoGo] ")
+	global.Hit = database.LoadHitokoto()
+	global.Configs = database.LoadConfig()
+	global.Port = global.Configs.Server.Port
+	global.KeyAdmin = global.Configs.Security.Key.Admin
+	global.KeyUser = global.Configs.Security.Key.User
+	global.KeyAll = append(global.KeyAdmin, global.KeyUser...)
+	log.Println("初始化完成")
 
-	log.Println(configs.Security.Key)
 }
 func main() {
 	r := gin.Default()
-	api.Get(r, &Hit, key_all)
-	api.AddHit(r, &Hit, key_admin)
-	api.DelHit(r, Hit, key_admin)
-	err := r.Run(fmt.Sprintf("%s", port))
+	api.Get(r)
+	api.AddHit(r)
+	api.DelHit(r)
+	err := r.Run(":" + global.Port)
 	if err != nil {
 		return
 	}

@@ -2,6 +2,7 @@ package api
 
 import (
 	"MottoGo/database"
+	"MottoGo/global"
 	"MottoGo/middleware"
 	"MottoGo/models"
 	"encoding/json"
@@ -11,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddHit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
+func AddHit(r *gin.Engine) {
 	r.POST("/hitokoto/AddHit", func(c *gin.Context) {
 		var hitokoto models.Hitokoto
 		err := c.ShouldBindJSON(&hitokoto)
@@ -21,9 +22,9 @@ func AddHit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
 			return
 		}
 		// AuthKey 进行验证
-		middleware.AuthKey(k, Authorization)
-		// 获取Id
-		hitokoto.Id = (*hit)[len(*hit)-1].Id + 1
+		middleware.AuthKey(global.KeyAdmin, Authorization)
+		// 获取 Id
+		hitokoto.Id = global.Hit[len(global.Hit)-1].Id + 1
 		byteHit, err := json.Marshal(hitokoto)
 		if err != nil {
 			c.JSON(500, gin.H{"error": "Failed to format data"})
@@ -52,7 +53,7 @@ func AddHit(r *gin.Engine, hit *[]models.Hitokoto, k []string) {
 			return
 		}
 		c.JSON(200, gin.H{"message": "写入成功", "data": hitokoto})
-		*hit = database.LoadHitokoto()
-		fmt.Println(*hit)
+		global.Hit = database.LoadHitokoto()
+		fmt.Println(global.Hit)
 	})
 }
