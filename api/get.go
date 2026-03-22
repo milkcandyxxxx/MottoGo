@@ -32,7 +32,7 @@ func Get(r *gin.Engine) {
 				if hits, ok := global.Hit[category]; ok {
 					c.JSON(200, hits)
 				} else {
-					c.JSON(404, gin.H{"error": "Category not found"})
+					c.JSON(200, []models.Hitokoto{})
 				}
 			} else {
 				// 所有分类
@@ -47,7 +47,7 @@ func Get(r *gin.Engine) {
 				hitokoto := hits[rand.Intn(len(hits))]
 				c.JSON(200, hitokoto)
 			} else {
-				c.JSON(404, gin.H{"error": "Category not found"})
+				c.JSON(200, gin.H{"hitokoto": "No data", "from": "", "from_who": "", "type": category})
 			}
 		} else {
 			allHits := []models.Hitokoto{}
@@ -58,7 +58,7 @@ func Get(r *gin.Engine) {
 				hitokoto := allHits[rand.Intn(len(allHits))]
 				c.JSON(200, hitokoto)
 			} else {
-				c.JSON(404, gin.H{"error": "No data"})
+				c.JSON(200, gin.H{"hitokoto": "No data", "from": "", "from_who": "", "type": ""})
 			}
 		}
 	})
