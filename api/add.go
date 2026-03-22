@@ -21,14 +21,15 @@ func AddHit(r *gin.Engine) {
 		// 获取信息
 		var hitokoto models.Hitokoto
 		err := c.ShouldBindJSON(&hitokoto)
-		Authorization := c.GetHeader("Authorization")
+		XAPIKey := c.GetHeader("X-API-Key")
 		if err != nil {
 			c.JSON(400, gin.H{"error": "Invalid JSON" + err.Error()})
 			return
 		}
 		// AuthKey 进行验证
-		if !middleware.AuthKey(global.KeyAdmin, Authorization) {
+		if !middleware.AuthKey(global.KeyAdmin, XAPIKey) {
 			c.JSON(401, gin.H{"error": "Who are you?"})
+			return
 		}
 		// 生成 UUID
 		hitokoto.Uuid = uuid.New().String()
@@ -64,6 +65,6 @@ func AddHit(r *gin.Engine) {
 		}
 		// 更新全局变量
 		global.Hit[hitokoto.Type] = append(global.Hit[hitokoto.Type], hitokoto)
-		c.JSON(200, gin.H{"message": "Write success", "data": hitokoto})
+		c.JSON(200, gin.H{"ok": "Write success", "data": hitokoto})
 	})
 }
