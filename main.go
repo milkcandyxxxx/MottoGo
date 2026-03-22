@@ -4,6 +4,7 @@ import (
 	"MottoGo/api"
 	"MottoGo/database"
 	"MottoGo/global"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -21,6 +22,13 @@ func init() {
 }
 func main() {
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "X-API-Key"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 	api.Get(r)
 	api.AddHit(r)
 	api.DelHit(r)
