@@ -12,7 +12,7 @@ func DelHit(r *gin.Engine) {
 	r.GET("/hitokoto/DelHit", func(c *gin.Context) {
 		// 限流
 		if !Ratelimit.Limit(c.ClientIP()) {
-			c.JSON(429, gin.H{"error": "Too many requests!"})
+			c.JSON(429, gin.H{"msg": "Too many requests!"})
 			return
 		}
 		// 获取信息
@@ -21,15 +21,15 @@ func DelHit(r *gin.Engine) {
 
 		// 权限验证
 		if !middleware.AuthKey(global.KeyAll, key) {
-			c.JSON(401, gin.H{"error": "Who are you?"})
+			c.JSON(401, gin.H{"msg": "Who are you?"})
 			return
 		}
 		if !middleware.AuthKey(global.KeyAdmin, key) {
-			c.JSON(403, gin.H{"error": "You cannot do it"})
+			c.JSON(403, gin.H{"msg": "You cannot do it"})
 			return
 		}
 		if uuid == "" {
-			c.JSON(400, gin.H{"error": "UUID required"})
+			c.JSON(400, gin.H{"msg": "UUID required"})
 			return
 		}
 
@@ -54,7 +54,7 @@ func DelHit(r *gin.Engine) {
 		}
 
 		if delIndex == -1 {
-			c.JSON(404, gin.H{"error": "UUID not found in any category"})
+			c.JSON(404, gin.H{"msg": "UUID not found in any category"})
 			return
 		}
 
@@ -64,7 +64,7 @@ func DelHit(r *gin.Engine) {
 		// 重写文件
 		f, err := os.OpenFile("./cartoon.jsonl", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Failed to open file: " + err.Error()})
+			c.JSON(500, gin.H{"msg": "Failed to open file: "})
 			return
 		}
 		defer f.Close()
@@ -85,7 +85,7 @@ func DelHit(r *gin.Engine) {
 			}
 		}
 		c.JSON(200, gin.H{
-			"ok":       "Delete successful",
+			"msg":      "Delete successful",
 			"hitokoto": delHit,
 		})
 	})

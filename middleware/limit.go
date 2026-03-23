@@ -7,7 +7,6 @@ import (
 
 // Ratelimit 限流器
 type Ratelimit struct {
-	// key 是 IP，value 是 *rate.Limiter (官方限流器对象)
 	limiters sync.Map
 }
 

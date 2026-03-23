@@ -15,7 +15,7 @@ func AddHit(r *gin.Engine) {
 	r.POST("/hitokoto/AddHit", func(c *gin.Context) {
 		// 限流
 		if !Ratelimit.Limit(c.ClientIP()) {
-			c.JSON(429, gin.H{"error": "Too many requests!"})
+			c.JSON(429, gin.H{"msg": "Too many requests!"})
 			return
 		}
 		// 获取信息
@@ -23,25 +23,25 @@ func AddHit(r *gin.Engine) {
 		err := c.ShouldBindJSON(&hitokoto)
 		XAPIKey := c.GetHeader("X-API-Key")
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Invalid JSON" + err.Error()})
+			c.JSON(400, gin.H{"msg": "Invalid JSON"})
 			return
 		}
 		// AuthKey 进行验证
 		if !middleware.AuthKey(global.KeyAdmin, XAPIKey) {
-			c.JSON(401, gin.H{"error": "Who are you?"})
+			c.JSON(401, gin.H{"msg": "Who are you?"})
 			return
 		}
 		// 生成 UUID
 		hitokoto.Uuid = uuid.New().String()
 		byteHit, err := json.Marshal(hitokoto)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Format failed" + err.Error()})
+			c.JSON(500, gin.H{"msg": "Format failed"})
 			return
 		}
 		// 写入到 cartoon.jsonl 文件
 		f, err := os.OpenFile("./cartoon.jsonl", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Failed to open file" + err.Error()})
+			c.JSON(500, gin.H{"msg": "Failed to open file"})
 			return
 		}
 		defer func(f *os.File) {
@@ -54,17 +54,17 @@ func AddHit(r *gin.Engine) {
 		if err == nil && fileInfo.Size() > 0 {
 			_, err = f.WriteString("\n")
 			if err != nil {
-				c.JSON(500, gin.H{"error": "Write failure" + err.Error()})
+				c.JSON(500, gin.H{"msg": "Write failure"})
 				return
 			}
 		}
 		_, err = f.Write(byteHit)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Write failure" + err.Error()})
+			c.JSON(500, gin.H{"msg": "Write failure"})
 			return
 		}
 		// 更新全局变量
 		global.Hit[hitokoto.Type] = append(global.Hit[hitokoto.Type], hitokoto)
-		c.JSON(200, gin.H{"ok": "Write success", "data": hitokoto})
+		c.JSON(200, gin.H{"msg": "Write success", "data": hitokoto})
 	})
 }

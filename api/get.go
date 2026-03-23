@@ -14,7 +14,7 @@ func Get(r *gin.Engine) {
 	r.GET("/hitokoto", func(c *gin.Context) {
 		// 限流
 		if !Ratelimit.Limit(c.ClientIP()) {
-			c.JSON(429, gin.H{"error": "Too many requests!"})
+			c.JSON(429, gin.H{"msg": "Too many requests!"})
 			return
 		}
 		// 获取信息
@@ -22,7 +22,7 @@ func Get(r *gin.Engine) {
 		all := c.Query("all")
 		// 身份验证
 		if !middleware.SecurityVerification(c, global.KeyAll) {
-			c.JSON(401, gin.H{"error": "Who are you?"})
+			c.JSON(401, gin.H{"msg": "Who are you?"})
 			return
 		}
 		// 返回所有句子
