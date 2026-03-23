@@ -9,14 +9,14 @@ import (
 )
 
 func DelHit(r *gin.Engine) {
-	r.GET("/hitokoto/DelHit", func(c *gin.Context) {
+	r.DELETE("/hitokoto/DelHit/:uuid", func(c *gin.Context) {
 		// 限流
 		if !Ratelimit.Limit(c.ClientIP()) {
 			c.JSON(429, gin.H{"msg": "Too many requests!"})
 			return
 		}
 		// 获取信息
-		uuid := c.Query("uuid")
+		uuid := c.Param("uuid")
 		key := c.GetHeader("X-API-key")
 
 		// 权限验证
