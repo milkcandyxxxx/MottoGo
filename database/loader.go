@@ -3,17 +3,15 @@ package database
 import (
 	"MottoGo/models"
 	"encoding/json"
+	"gopkg.in/yaml.v3"
 	"io"
 	"log"
 	"os"
-
-	"gopkg.in/yaml.v3"
 )
 
 // LoadHitokoto 加载句子，按 Type 字段分类
 func LoadHitokoto() map[string][]models.Hitokoto {
 	hitMap := make(map[string][]models.Hitokoto)
-
 	// 读取文件
 	res, err := os.Open("./cartoon.jsonl")
 	if err != nil {
