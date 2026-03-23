@@ -31,7 +31,7 @@ security:
 
 请求头：`X-API-key`
 
-权限分为admin（所以权限）与user（仅查看）
+权限分为admin（所有权限）与user（仅查看）
 
 ## 接口：
 
