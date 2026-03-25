@@ -37,6 +37,13 @@ func DelHit(r *gin.Engine) {
 		}
 		// 依据uuid删除
 		delhit := database.DB.Where("uuid = ?", uuid).Delete(&models.Hitokoto{})
+		if delhit.Error != nil {
+			c.JSON(500, gin.H{"code": 500, "msg": "Execution Failed", "data": nil})
+		}
+		if delhit.RowsAffected == 0 {
+			c.JSON(404, gin.H{"msg": "uuid not found", "data": nil})
+			return
+		}
 		c.JSON(200, gin.H{
 			"code": 200,
 			"msg":  "删除成功",
