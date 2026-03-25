@@ -4,7 +4,9 @@ import (
 	"MottoGo/database"
 	"MottoGo/global"
 	"MottoGo/middleware"
+	"errors"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 var Ratelimit = &middleware.Ratelimit{}
@@ -26,9 +28,12 @@ func Get(r *gin.Engine) {
 		}
 		// 获取句子
 		hitokoto, err := database.GetRandomHitokoto(c)
-		if err != nil {
-			c.JSON(500, gin.H{"code": 500, "msg": "No hitokoto found", "data": nil})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(500, gin.H{"code": 404, "msg": "No hitokoto found", "data": nil})
+			c.Abort()
+			return
 		}
-		c.JSON(201, gin.H{"code": 200, "msg": "查询成功", "data": hitokoto})
+
+		c.JSON(200, gin.H{"code": 200, "msg": "查询成功", "data": hitokoto})
 	})
 }
