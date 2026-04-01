@@ -19,12 +19,15 @@ func Get(r *gin.Engine) {
 			c.Abort()
 			return
 		}
-		authorization := c.GetHeader("authorization")
-		// 身份验证
-		if !middleware.AuthKey(global.KeyAll, authorization) {
-			c.JSON(401, gin.H{"msg": "Who are you?", "data": nil})
-			c.Abort()
-			return
+		// 验证是否开启验证
+		if global.Configs.Server.RequireUserkey {
+			authorization := c.GetHeader("authorization")
+			// 身份验证
+			if !middleware.AuthKey(global.KeyAll, authorization) {
+				c.JSON(401, gin.H{"msg": "Who are you?", "data": nil})
+				c.Abort()
+				return
+			}
 		}
 		// 获取句子
 		hitokoto, err := database.GetRandomHitokoto(c)

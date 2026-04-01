@@ -21,11 +21,14 @@ type Hitokoto struct {
 
 // Config 配置文件
 type Config struct {
-	Server   Config_sever `yaml:"server"`
-	Security Security     `yaml:"security"`
+	Server   Sever    `yaml:"server"`
+	Security Security `yaml:"security"`
+	Limit    Limit    `yaml:"limit"`
 }
-type Config_sever struct {
-	Port string `yaml:"port"`
+type Sever struct {
+	Port           string `yaml:"port"`
+	AllowCors      bool   `yaml:"allow_cors"`
+	RequireUserkey bool   `yaml:"require_userkey"`
 }
 type Security struct {
 	Key Key `yaml:"key"`
@@ -33,4 +36,8 @@ type Security struct {
 type Key struct {
 	Admin []string `yaml:"admin"`
 	User  []string `yaml:"user"`
+}
+type Limit struct {
+	Rate  uint8 `yaml:"rate"`
+	Burst uint8 `yaml:"burst"`
 }

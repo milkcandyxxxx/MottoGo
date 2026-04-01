@@ -3,11 +3,24 @@ package global
 import "MottoGo/models"
 
 var (
-	Configs  models.Config
-	Port     string
+	// 配置文件
+	Configs models.Config
+	// 端口
+	Port string
+	// admin的密码
 	KeyAdmin []string
-	KeyUser  []string
-	KeyAll   []string
+	// user的密码
+	KeyUser []string
+	// 所有密码用于区分权限
+	KeyAll []string
+	// 跨域
+	AllowCors bool
+	// 每秒恢复
+	LimitRate uint8
+	// 总量
+	LimitBurst uint8
+	// 基础用户验证
+	RequireUserkey bool
 )
 
 // // CategoryMap 映射
