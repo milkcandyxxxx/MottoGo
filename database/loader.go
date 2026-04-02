@@ -35,15 +35,6 @@ func LoadConfig() models.Config {
 		fmt.Println("###请输入有效信息###")
 		fmt.Print("程序允许端口:")
 		fmt.Scanln(&port)
-		fmt.Print("是否开启用户认证(y or n):")
-		fmt.Scanln(&requireUserkey)
-		if requireUserkey == "y" || requireUserkey == "n" {
-			if ynToBool(requireUserkey) {
-				requireUserkeyBool = true
-			} else {
-				requireUserkeyBool = false
-			}
-		}
 		fmt.Print("限流器设置(y:默认 or n:自定义):")
 		fmt.Scanln(&limit)
 		if limit == "y" || limit == "n" {
@@ -68,6 +59,20 @@ func LoadConfig() models.Config {
 		}
 		fmt.Print("管理员密码:")
 		fmt.Scanln(&keyAdmin)
+		fmt.Print("是否开启用户认证(y or n):")
+		fmt.Scanln(&requireUserkey)
+		if requireUserkey == "y" || requireUserkey == "n" {
+			if ynToBool(requireUserkey) {
+				requireUserkeyBool = true
+				fmt.Print("用户密码:")
+				fmt.Scanln(&keyUser)
+			} else {
+				requireUserkeyBool = false
+			}
+		}
+		if keyUser != "" {
+			keyUser = fmt.Sprintf("%x", md5.Sum([]byte(keyUser)))
+		}
 		// 使用反引号包裹，保持原样格式
 		basicFormat := fmt.Sprintf(`server:
   port: %s # 运行端口
@@ -82,7 +87,7 @@ security:
 limit:
   rate: %s   # 每秒允许生成的令牌数（QPS）
   burst: %s  # 桶的最大容量（允许瞬间爆发的请求数）
-`, port, allowCorsBool, requireUserkeyBool, fmt.Sprintf("%x", md5.Sum([]byte(keyAdmin))), fmt.Sprintf("%x", md5.Sum([]byte(keyUser))), limitRate, limitBurst)
+`, port, allowCorsBool, requireUserkeyBool, fmt.Sprintf("%x", md5.Sum([]byte(keyAdmin))), keyUser, limitRate, limitBurst)
 		fmt.Println(basicFormat)
 		err := os.WriteFile("config.yaml", []byte(basicFormat), 0644)
 		if err != nil {
