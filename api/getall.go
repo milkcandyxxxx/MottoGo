@@ -26,9 +26,6 @@ func GetAll(r *gin.Engine) {
 				c.Abort()
 				return
 			}
-		} else {
-			c.Abort()
-			return
 		}
 
 		// 获取句子
